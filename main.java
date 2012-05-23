@@ -59,7 +59,7 @@ public class Main
         Element rootElement2 = doc2.getDocumentElement();
         
         //vysledná pole child nodes kořenových elementů
-        Node[] list1 = rootElement1.getChildNodes().convertToArray();
-        Node[] list2 = rootElement2.getChildNodes().convertToArray();
+        Node[] list1 = convertToArray(rootElement1.getChildNodes());
+        Node[] list2 = convertToArray(rootElement2.getChildNodes());
     }
 }
