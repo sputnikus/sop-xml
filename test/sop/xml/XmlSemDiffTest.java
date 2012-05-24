@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package sop.xml;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -17,8 +13,10 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
- *
- * @author sputnikus
+ * XmlSemDiff test class
+ *  
+ * @author Martin Putniorz
+ * @version 24052012
  */
 public class XmlSemDiffTest {
     
