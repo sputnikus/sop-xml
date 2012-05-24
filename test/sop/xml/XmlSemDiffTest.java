@@ -44,10 +44,10 @@ public class XmlSemDiffTest {
 
     @Before
     public void setUp() throws SAXException, ParserConfigurationException {
-        leadingWhitespace.appendChild(doc.createTextNode("      test"));
-        trailingWhitespace.appendChild(doc.createTextNode("test         "));
-        leadingAndTrailingWhitespace.appendChild(doc.createTextNode("  test     "));
-        innerWhitespace.appendChild(doc.createTextNode("te st"));
+        leadingWhitespace.setTextContent("      test");
+        trailingWhitespace.setTextContent("test         ");
+        leadingAndTrailingWhitespace.setTextContent("  test     ");
+        innerWhitespace.setTextContent("te st");
     }
 
     @Test
@@ -60,6 +60,7 @@ public class XmlSemDiffTest {
         assertFalse(diff.whitespaceCompare(innerWhitespace, leadingAndTrailingWhitespace, false));
     }
     
+    @Test
     public void testInnerWhitespaceCompare() {
         XmlSemDiffInterface diff = new XmlSemDiff();
         
