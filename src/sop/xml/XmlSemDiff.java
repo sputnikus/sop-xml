@@ -1,11 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package sop.xml;
 
 /**
- *
+ * XML semantic comaparator class
+ * 
+ * 
  * @author sputnikus
  */
 public class XmlSemDiff {
