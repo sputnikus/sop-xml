@@ -39,6 +39,7 @@ public class XmlSemDiff implements XmlSemDiffInterface{
         return content1.equals(content2);
     }
     
+    @Override
     public boolean orderCompare(Element rootEl1, Element rootEl2, boolean 
             similarity) throws NullPointerException{
         
