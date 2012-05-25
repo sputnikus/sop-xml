@@ -47,6 +47,7 @@ public class XmlSemDiff implements XmlSemDiffInterface{
         
         NodeList list1= rootEl1.getChildNodes();
         NodeList list2= rootEl2.getChildNodes();
+        
         int length = list1.getLength();
         
         //comparing names of elements
