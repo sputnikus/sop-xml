@@ -53,9 +53,7 @@ public class XmlSemDiff implements XmlSemDiffInterface{
         //comparing names of elements
         for(int n = 0; n < length; n++){
             if (!list1.item(n).getNodeName().equals(list2.item(n).getNodeName())){
-                if(!similarity){
-                    return false;
-                }   
+                return similarity;   
             }        
         } 
         return true;
