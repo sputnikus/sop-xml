@@ -24,4 +24,15 @@ public interface XmlSemDiffInterface {
      * @return True if element content is similar despite of whitespaces, false otherwise
      */
     boolean whitespaceCompare(Element elm1, Element elm2, boolean trimOrReplace);
+    
+    /**
+     * Compare elements of two documents in terms of their order
+     * 
+     * @param rootEl1 First root element of document to be compared
+     * @param rootEl2 Second root element of document to be compared
+     * @param similarity Compare if it is similar or equal
+     * @return True if elements have same order or document is similar despite of 
+     *      different order, false otherwise
+     */
+    boolean orderCompare(Element rootEl1, Element rootEl2, boolean similarity);
 }
