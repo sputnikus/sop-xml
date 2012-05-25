@@ -1,6 +1,7 @@
 package sop.xml;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * XML semantic comaparator class
