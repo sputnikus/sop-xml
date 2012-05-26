@@ -66,6 +66,8 @@ public class SopXml {
         SopXml subor2 = newInstance(input2);
 
         elementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
+        XmlSemDiffInterface diff = new XmlSemDiff();
+        diff.orderCompare(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement(), true);
     }
     
     /**
@@ -93,7 +95,10 @@ public class SopXml {
                 boolean returnValue = true;
                 boolean value = true;
                 for (int i = 0; i < length; i++) {
-                    if (!"#text".equals(listA.item(i).getNodeName()) & !"#comment".equals(listA.item(i).getNodeName())) {
+                    if (!"#text".equals(listA.item(i).getNodeName()) 
+                            && !"#comment".equals(listA.item(i).getNodeName()) 
+                            && !"#text".equals(listB.item(i).getNodeName()) 
+                            && !"#comment".equals(listB.item(i).getNodeName())) {
                         value &= listA.item(i).getNodeName().equals(listB.item(i).getNodeName());
                         if (!value) {
                             return false;
