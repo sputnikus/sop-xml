@@ -30,16 +30,7 @@ public class SopXml {
         return newInstance(file.toURI());
     }
   
-    public static Node[] convertToArray(NodeList list)
-    {
-        int length = list.getLength();
-        Node[] copy = new Node[length];
-      
-        for (int n = 0; n < length; ++n)
-        copy[n] = list.item(n);
-          
-        return copy;
-    }
+
 
     /**
      * Constructor creates new instance of SopXml class reading two documents at
@@ -54,16 +45,9 @@ public class SopXml {
     private SopXml(URI uri) throws SAXException, ParserConfigurationException,
             IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        
         DocumentBuilder builder = factory.newDocumentBuilder();
-        
         doc = builder.parse(uri.toString());
-        
         Element rootElement = doc.getDocumentElement();
-        
-        //vysledná pole child nodes kořenových elementů
-        Node[] list = convertToArray(rootElement.getChildNodes());
-        // Na co? Nestačí nám docy?
     }
 
     /**
