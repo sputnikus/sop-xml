@@ -94,7 +94,6 @@ public class SopXml {
                         if (!value) {
                             return false;
                         }
-                        System.out.println(listA.item(i).getNodeName());
                         returnValue &= elementEquals((Element) listA.item(i), (Element) listB.item(i));
                     }
                 }
