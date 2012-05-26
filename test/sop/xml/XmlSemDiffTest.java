@@ -33,6 +33,10 @@ public class XmlSemDiffTest {
     private static Element rootElement;
     private static Element rootElement1;
     private static Element rootElement2;
+    private static Element trailingWhitespace1;
+    private static Element trailingWhitespace2;
+    private static Element leadingAndTrailingWhitespace1;
+     private static Element leadingWhitespace2;
     
     public XmlSemDiffTest() {
     }
@@ -51,24 +55,28 @@ public class XmlSemDiffTest {
         doc.appendChild(rootElement);
         rootElement.appendChild(leadingWhitespace);
         rootElement.appendChild(trailingWhitespace);
-        rootElement.appendChild(leadingAndTrailingWhitespace);
-        rootElement.appendChild(innerWhitespace);
+        trailingWhitespace.appendChild(leadingAndTrailingWhitespace);
+        leadingAndTrailingWhitespace.appendChild(innerWhitespace);
         
         doc1 = build.newDocument();
         rootElement1 = doc1.createElement("rootElement");
         doc1.appendChild(rootElement1);
         rootElement1.appendChild(doc1.createElement("leadingWhitespace"));
-        rootElement1.appendChild(doc1.createElement("trailingWhitespace"));
-        rootElement1.appendChild(doc1.createElement("leadingAndTrailingWhitespace"));
-        rootElement1.appendChild(doc1.createElement("innerWhitespace"));
+        trailingWhitespace1 = doc1.createElement("trailingWhitespace");
+        rootElement1.appendChild(trailingWhitespace1);
+        leadingAndTrailingWhitespace1 = doc1.createElement("leadingAndTrailingWhitespace");
+        trailingWhitespace1.appendChild(leadingAndTrailingWhitespace1);
+        leadingAndTrailingWhitespace1.appendChild(doc1.createElement("innerWhitespace"));
         
         doc2 = build.newDocument();
         rootElement2 = doc2.createElement("rootElement");
         doc2.appendChild(rootElement2);
         rootElement2.appendChild(doc2.createElement("leadingAndTrailingWhitespace"));
-        rootElement2.appendChild(doc2.createElement("trailingWhitespace"));
-        rootElement2.appendChild(doc2.createElement("leadingWhitespace"));
-        rootElement2.appendChild(doc2.createElement("innerWhitespace"));
+        trailingWhitespace2 = doc2.createElement("trailingWhitespace");
+        rootElement2.appendChild(trailingWhitespace2);
+        leadingWhitespace2 = doc2.createElement("leadingWhitespace");
+        trailingWhitespace2.appendChild(leadingWhitespace2);
+        leadingWhitespace2.appendChild(doc2.createElement("innerWhitespace"));
     }
 
     @Before
