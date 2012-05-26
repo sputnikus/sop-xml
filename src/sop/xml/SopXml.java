@@ -1,14 +1,13 @@
 package sop.xml;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import javax.xml.transform.TransformerException;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 /**
@@ -19,12 +18,16 @@ import org.xml.sax.SAXException;
  */
 public class SopXml {
     
-    private Document doc1;
-    private Document doc2;
+    private Document doc;
     
-    public static SopXml newInstance(URI uri1, URI uri2) throws SAXException,
+    public static SopXml newInstance(URI uri) throws SAXException,
         ParserConfigurationException, IOException {
-        return new SopXml(uri1,uri2);
+        return new SopXml(uri);
+    }
+    
+    public static SopXml newInstance(File file)
+            throws SAXException, ParserConfigurationException, IOException {
+        return newInstance(file.toURI());
     }
   
     public static Node[] convertToArray(NodeList list)
@@ -48,30 +51,98 @@ public class SopXml {
      * @throws ParserConfigurationException
      * @throws IOException 
      */
-    private SopXml(URI uri1,URI uri2) throws SAXException, ParserConfigurationException,
+    private SopXml(URI uri) throws SAXException, ParserConfigurationException,
             IOException {
-        DocumentBuilderFactory factory1 = DocumentBuilderFactory.newInstance();
-        DocumentBuilderFactory factory2 = DocumentBuilderFactory.newInstance();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         
-        DocumentBuilder builder1 = factory1.newDocumentBuilder();
-        DocumentBuilder builder2 = factory2.newDocumentBuilder();
+        DocumentBuilder builder = factory.newDocumentBuilder();
         
-        doc1 = builder1.parse(uri1.toString());
-        doc2 = builder2.parse(uri2.toString()); 
+        doc = builder.parse(uri.toString());
         
-        Element rootElement1 = doc1.getDocumentElement();
-        Element rootElement2 = doc2.getDocumentElement();
+        Element rootElement = doc.getDocumentElement();
         
         //vysledná pole child nodes kořenových elementů
-        Node[] list1 = convertToArray(rootElement1.getChildNodes());
-        Node[] list2 = convertToArray(rootElement2.getChildNodes());
+        Node[] list = convertToArray(rootElement.getChildNodes());
         // Na co? Nestačí nám docy?
     }
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public static void main(String[] args) throws IOException, SAXException, 
+            ParserConfigurationException, TransformerException {
+        if (args.length < 1) {
+            System.err.println("Firts document expected!");
+            return;
+        } else if (args.length < 2) {
+            System.err.println("Second document expected!");
+            return;
+        }
+        
+        File input1 = new File(args[0]);
+        File input2 = new File(args[1]);
+        SopXml subor1 = newInstance(input1);
+        SopXml subor2 = newInstance(input2);
+
+        elementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
+    }
+    
+    public static boolean elementEquals(Element a, Element b) {
+        if (a == null) {
+            throw new IllegalArgumentException("Element 1");
+        }
+        if (b == null) {
+            throw new IllegalArgumentException("Element 2");
+        }
+
+        if (a.getFirstChild() == null) {
+            return diferentOrderOfAttributes(a, b);
+        } else {
+            NodeList listA = a.getChildNodes();
+            NodeList listB = b.getChildNodes();
+            if (listA.getLength() == listA.getLength()) {
+                int length = listA.getLength();
+                boolean returnValue = true;
+                boolean value = true;
+                for (int i = 0; i < length; i++) {
+                    if (!"#text".equals(listA.item(i).getNodeName()) & !"#comment".equals(listA.item(i).getNodeName())) {
+                        value &= listA.item(i).getNodeName().equals(listB.item(i).getNodeName());
+                        if (!value) {
+                            return false;
+                        }
+                        System.out.println(listA.item(i).getNodeName());
+                        returnValue &= elementEquals((Element) listA.item(i), (Element) listB.item(i));
+                    }
+                }
+                return returnValue;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public static boolean diferentOrderOfAttributes(Element a, Element b) {
+        NamedNodeMap attributesA = a.getAttributes();
+        NamedNodeMap attributesB = b.getAttributes();
+        if ((attributesA.getLength()) != (attributesB.getLength())) {
+            return false;
+        }
+        if (!a.getTextContent().equals(b.getTextContent())) {
+            return false;
+        }
+        int j = 0;
+        int s = 0;
+
+        for (int i = 0; i < attributesA.getLength(); i++) {
+            for (int h = 0; h < attributesB.getLength(); h++) {
+                if (attributesA.item(i).equals(attributesB.item(h))) {
+                    j++;
+                }
+                if (j >= 1) {
+                    s++;
+                }
+            }
+        }
+        return s == attributesA.getLength();
     }
 }
