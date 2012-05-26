@@ -30,8 +30,6 @@ public class SopXml {
         return newInstance(file.toURI());
     }
   
-
-
     /**
      * Constructor creates new instance of SopXml class reading two documents at
      * given URIs
@@ -47,7 +45,6 @@ public class SopXml {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         doc = builder.parse(uri.toString());
-        Element rootElement = doc.getDocumentElement();
     }
 
     /**
@@ -71,6 +68,13 @@ public class SopXml {
         elementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
     }
     
+    /**
+     * Compare names of two elements
+     * 
+     * @param a First element to compare
+     * @param b Second element to compare
+     * @return True, if names of two elements equals, false otherwise
+     */
     public static boolean elementEquals(Element a, Element b) {
         if (a == null) {
             throw new IllegalArgumentException("Element 1");
@@ -103,7 +107,14 @@ public class SopXml {
             }
         }
     }
-
+    
+    /**
+     * Compare order of attributes in two elements
+     * 
+     * @param a First element to compare
+     * @param b Second element to compare
+     * @return True, if order of attributes is equal, false otherwise
+     */
     public static boolean diferentOrderOfAttributes(Element a, Element b) {
         NamedNodeMap attributesA = a.getAttributes();
         NamedNodeMap attributesB = b.getAttributes();
