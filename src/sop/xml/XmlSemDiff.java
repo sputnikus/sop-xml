@@ -1,8 +1,6 @@
 package sop.xml;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
 /**
  * XML semantic comaparator class
@@ -52,17 +50,16 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         } else {
             NodeList listA = justChildNodes(a);
             NodeList listB = justChildNodes(b);
-
+            
             if (listA.getLength() == listB.getLength()) {
-                boolean returnValue = true;
-      
                 for (int i = 0; i < listA.getLength(); i++) {
-                    if (!listA.item(i).getNodeName().equals(listB.item(i).getNodeName())) {
+                    if (listA.item(i).getNodeName().equals(listB.item(i).getNodeName())) {
+                        orderElementEquals((Element) listA.item(i), (Element) listB.item(i));
+                    }else{
                         return false;
                     }
-                    returnValue &= orderElementEquals((Element) listA.item(i), (Element) listB.item(i));
                 }
-                return returnValue;
+                return true;
             } else {
                 return false;
             }
@@ -179,14 +176,15 @@ public class XmlSemDiff implements XmlSemDiffInterface {
      * @return NodeList without #text and #comment node
      */
     private NodeList justChildNodes(Element e) {
-        NodeList nl = e.getChildNodes();
+        NodeList list = e.getChildNodes();
         
-        for (int i = 0; i < nl.getLength(); i++) {
-            if ("#text".equals(nl.item(i).getNodeName())
-                    || "#comment".equals(nl.item(i).getNodeName())) {
-                nl.item(i).getParentNode().removeChild(nl.item(i));
+        for (int i = 0; list.item(i) != null; i++) {
+            Node n = list.item(i);
+            if (n instanceof Text || n instanceof Comment) {
+                e.removeChild(n);
+                i--;
             }
         }
-        return nl;
+        return list;
     }
 }
