@@ -65,83 +65,8 @@ public class SopXml {
         SopXml subor1 = newInstance(input1);
         SopXml subor2 = newInstance(input2);
 
-        elementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
         XmlSemDiffInterface diff = new XmlSemDiff();
-        diff.orderCompare(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement(), true);
+        diff.elementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
+        diff.orderElementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
     }
-    
-    /**
-     * Compare names of two elements
-     * 
-     * @param a First element to compare
-     * @param b Second element to compare
-     * @return True, if names of two elements equals, false otherwise
-     */
-    public static boolean elementEquals(Element a, Element b) {
-        if (a == null) {
-            throw new IllegalArgumentException("Element 1");
-        }
-        if (b == null) {
-            throw new IllegalArgumentException("Element 2");
-        }
-
-        if (a.getFirstChild() == null) {
-            return diferentOrderOfAttributes(a, b);
-        } else {
-            NodeList listA = a.getChildNodes();
-            NodeList listB = b.getChildNodes();
-            if (listA.getLength() == listA.getLength()) {
-                int length = listA.getLength();
-                boolean returnValue = true;
-                boolean value = true;
-                for (int i = 0; i < length; i++) {
-                    if (!"#text".equals(listA.item(i).getNodeName()) 
-                            && !"#comment".equals(listA.item(i).getNodeName()) 
-                            && !"#text".equals(listB.item(i).getNodeName()) 
-                            && !"#comment".equals(listB.item(i).getNodeName())) {
-                        value &= listA.item(i).getNodeName().equals(listB.item(i).getNodeName());
-                        if (!value) {
-                            return false;
-                        }
-                        returnValue &= elementEquals((Element) listA.item(i), (Element) listB.item(i));
-                    }
-                }
-                return returnValue;
-            } else {
-                return false;
-            }
-        }
-    }
-    
-    /**
-     * Compare order of attributes in two elements
-     * 
-     * @param a First element to compare
-     * @param b Second element to compare
-     * @return True, if order of attributes is equal, false otherwise
-     */
-    public static boolean diferentOrderOfAttributes(Element a, Element b) {
-        NamedNodeMap attributesA = a.getAttributes();
-        NamedNodeMap attributesB = b.getAttributes();
-        if ((attributesA.getLength()) != (attributesB.getLength())) {
-            return false;
-        }
-        if (!a.getTextContent().equals(b.getTextContent())) {
-            return false;
-        }
-        int j = 0;
-        int s = 0;
-
-        for (int i = 0; i < attributesA.getLength(); i++) {
-            for (int h = 0; h < attributesB.getLength(); h++) {
-                if (attributesA.item(i).equals(attributesB.item(h))) {
-                    j++;
-                }
-                if (j >= 1) {
-                    s++;
-                }
-            }
-        }
-        return s == attributesA.getLength();
-    }
-}
+  }
