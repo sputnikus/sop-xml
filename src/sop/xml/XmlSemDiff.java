@@ -53,9 +53,9 @@ public class XmlSemDiff implements XmlSemDiffInterface {
             NodeList listA = justChildNodes(a);
             NodeList listB = justChildNodes(b);
 
-            if (listA.getLength() == listA.getLength()) {
+            if (listA.getLength() == listB.getLength()) {
                 boolean returnValue = true;
-
+      
                 for (int i = 0; i < listA.getLength(); i++) {
                     if (!listA.item(i).getNodeName().equals(listB.item(i).getNodeName())) {
                         return false;
@@ -76,7 +76,7 @@ public class XmlSemDiff implements XmlSemDiffInterface {
      * @param b Second element to compare
      * @return True, if order of attributes is equal, false otherwise
      */
-    public static boolean diferentOrderOfAttributes(Element a, Element b) {
+    private boolean diferentOrderOfAttributes(Element a, Element b) {
         NamedNodeMap attributesA = a.getAttributes();
         NamedNodeMap attributesB = b.getAttributes();
         if ((attributesA.getLength()) != (attributesB.getLength())) {
@@ -120,7 +120,7 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                 int countOfBool = 0;
 
                 for (int i = 0; i < listA.getLength(); i++) {
-                    for (int j = 0; j < listA.getLength(); j++) {
+                    for (int j = 0; j < listB.getLength(); j++) {
                         if (listA.item(i).getNodeName().equals(listB.item(j).getNodeName())) {
                             countOfBool++;
                             
@@ -178,7 +178,7 @@ public class XmlSemDiff implements XmlSemDiffInterface {
      * @param a First element to compare
      * @return NodeList without #text and #comment node
      */
-    public static NodeList justChildNodes(Element e) {
+    private NodeList justChildNodes(Element e) {
         NodeList nl = e.getChildNodes();
         
         for (int i = 0; i < nl.getLength(); i++) {
