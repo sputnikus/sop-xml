@@ -118,28 +118,55 @@ public class XmlSemDiff implements XmlSemDiffInterface {
 
             if (listA.getLength() == listA.getLength()) {
                 int countOfBool = 0;
+                Element grannyNode1 = null;
+                Element grannyNode2 = null;
                 for (int i = 0; i < listA.getLength(); i++) {
                     for (int j = 0; j < listA.getLength(); j++) {
                         //System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
                         if (listA.item(i).getNodeName().equals(listB.item(j).getNodeName())) {
                             //System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
                             countOfBool++;
+                            //System.out.println(justChildNodes((Element) listB.item(j)).getLength());
+
+                            /*
+                            for(int m=0;m<justChildNodes((Element)listB.item(j)).getLength();m++){
+                                System.out.println(justChildNodes((Element)listB.item(j)).item(m).getNodeName());
+                            }
+                             */
+
                             if (justChildNodes((Element) listB.item(j)).getLength() == 0) {
-                                System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
-                                Element grannyNode1 = (Element) listA.item(i).getParentNode().getParentNode();
-                                Element grannyNode2 = (Element) listB.item(j).getParentNode().getParentNode();
+                                //System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
+                                //Element grannyNode1 = null;
+                                //Element grannyNode2 = null;
+                                Element rootEl = (Element) listB.item(j).getOwnerDocument().getDocumentElement();
+                                for (int n = 0; n < justChildNodes(rootEl).getLength(); n++) {
+                                    if (justChildNodes(rootEl).item(n).getNodeName().equals(listB.item(j).getNodeName())) {
+                                        grannyNode1 = (Element) listA.item(i).getParentNode();
+                                        grannyNode2 = (Element) listB.item(j).getParentNode();
+                                       // System.out.println(grannyNode1.getNodeName());
+                                    } else {
+                                        grannyNode1 = (Element) listA.item(i).getParentNode().getParentNode();
+                                        grannyNode2 = (Element) listB.item(j).getParentNode().getParentNode();
+                                        //System.out.println(grannyNode1.getNodeName());
+                                    }
+                                }
                                 Element e = (Element) listB.item(j);
                                 if (diferentOrderOfAttributes((Element) listA.item(i), (Element) listB.item(j))) {
                                     e.getParentNode().removeChild(e);
-                                    elementEquals(grannyNode1, grannyNode2);
-                                    break;
+                                    //elementEquals(grannyNode1, grannyNode2);
+                                   //break;
                                 } else {
                                     return false;
                                 }
                             } else {
-                                elementEquals((Element) listA.item(i), (Element) listB.item(j));
+                                //System.out.println(listA.item(i) + " ," + listB.item(j));
+                                if (listA.item(i) != null && listB.item(j) != null) {
+                                    elementEquals((Element) listA.item(i), (Element) listB.item(j));
+                                }
                             }
                         }
+                        if(grannyNode1!=null && grannyNode2!=null){
+                        elementEquals(grannyNode1, grannyNode2);}
                     }
                 }
                 if (countOfBool == listA.getLength()) {
