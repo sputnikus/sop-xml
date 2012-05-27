@@ -50,22 +50,17 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         if (a.getFirstChild() == null) {
             return diferentOrderOfAttributes(a, b);
         } else {
-            NodeList listA = a.getChildNodes();
-            NodeList listB = b.getChildNodes();
+            NodeList listA = justChildNodes(a);
+            NodeList listB = justChildNodes(b);
 
             if (listA.getLength() == listA.getLength()) {
                 boolean returnValue = true;
 
                 for (int i = 0; i < listA.getLength(); i++) {
-                    if (!"#text".equals(listA.item(i).getNodeName())
-                            && !"#comment".equals(listA.item(i).getNodeName())
-                            && !"#text".equals(listB.item(i).getNodeName())
-                            && !"#comment".equals(listB.item(i).getNodeName())) {
-                        if (!listA.item(i).getNodeName().equals(listB.item(i).getNodeName())) {
-                            return false;
-                        }
-                        returnValue &= orderElementEquals((Element) listA.item(i), (Element) listB.item(i));
+                    if (!listA.item(i).getNodeName().equals(listB.item(i).getNodeName())) {
+                        return false;
                     }
+                    returnValue &= orderElementEquals((Element) listA.item(i), (Element) listB.item(i));
                 }
                 return returnValue;
             } else {
@@ -118,36 +113,31 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         if (a.getFirstChild() == null) {
             return diferentOrderOfAttributes(a, b);
         } else {
-            NodeList listA = a.getChildNodes();
-            NodeList listB = b.getChildNodes();
+            NodeList listA = justChildNodes(a);
+            NodeList listB = justChildNodes(b);
 
             if (listA.getLength() == listA.getLength()) {
                 int countOfBool = 0;
                 for (int i = 0; i < listA.getLength(); i++) {
                     for (int j = 0; j < listA.getLength(); j++) {
-                        if (!"#text".equals(listA.item(i).getNodeName())
-                                && !"#text".equals(listB.item(j).getNodeName())
-                                && !"#comment".equals(listA.item(i).getNodeName())
-                                && !"#comment".equals(listB.item(j).getNodeName())) {
+                        //System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
+                        if (listA.item(i).getNodeName().equals(listB.item(j).getNodeName())) {
                             //System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
-                            if (listA.item(i).getNodeName().equals(listB.item(j).getNodeName())) {
-                                //System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
-                                countOfBool++;
-                                if (listB.item(j).getChildNodes().getLength() == 0) {
-                                    //System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
-                                    Element grannyNode1 = (Element) listA.item(i).getParentNode().getParentNode();
-                                    Element grannyNode2 = (Element) listB.item(j).getParentNode().getParentNode();
-                                    Element e = (Element) listB.item(j);
-                                    if (diferentOrderOfAttributes((Element) listA.item(i), (Element) listB.item(j))) {
-                                        e.getParentNode().removeChild(e);
-                                        elementEquals(grannyNode1, grannyNode2);
-                                        break;
-                                    } else {
-                                        return false;
-                                    }
+                            countOfBool++;
+                            if (justChildNodes((Element) listB.item(j)).getLength() == 0) {
+                                System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
+                                Element grannyNode1 = (Element) listA.item(i).getParentNode().getParentNode();
+                                Element grannyNode2 = (Element) listB.item(j).getParentNode().getParentNode();
+                                Element e = (Element) listB.item(j);
+                                if (diferentOrderOfAttributes((Element) listA.item(i), (Element) listB.item(j))) {
+                                    e.getParentNode().removeChild(e);
+                                    elementEquals(grannyNode1, grannyNode2);
+                                    break;
                                 } else {
-                                    elementEquals((Element) listA.item(i), (Element) listB.item(j));
+                                    return false;
                                 }
+                            } else {
+                                elementEquals((Element) listA.item(i), (Element) listB.item(j));
                             }
                         }
                     }
@@ -161,5 +151,22 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                 return false;
             }
         }
+    }
+
+    /**
+     * Return NodeList with elements children
+     *
+     * @param a First element to compare
+     * @return NodeList without #text and #comment node
+     */
+    public static NodeList justChildNodes(Element e) {
+        NodeList nl = e.getChildNodes();
+        for (int i = 0; i < nl.getLength(); i++) {
+            if ("#text".equals(nl.item(i).getNodeName())
+                    || "#comment".equals(nl.item(i).getNodeName())) {
+                nl.item(i).getParentNode().removeChild(nl.item(i));
+            }
+        }
+        return nl;
     }
 }
