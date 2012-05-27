@@ -36,7 +36,7 @@ public class XmlSemDiffTest {
     private static Element trailingWhitespace1;
     private static Element trailingWhitespace2;
     private static Element leadingAndTrailingWhitespace1;
-     private static Element leadingWhitespace2;
+     private static Element innerWhitespace2;
     
     public XmlSemDiffTest() {
     }
@@ -71,12 +71,12 @@ public class XmlSemDiffTest {
         doc2 = build.newDocument();
         rootElement2 = doc2.createElement("rootElement");
         doc2.appendChild(rootElement2);
-        rootElement2.appendChild(doc2.createElement("leadingAndTrailingWhitespace"));
+        rootElement2.appendChild(doc2.createElement("leadingWhitespace"));
         trailingWhitespace2 = doc2.createElement("trailingWhitespace");
         rootElement2.appendChild(trailingWhitespace2);
-        leadingWhitespace2 = doc2.createElement("leadingWhitespace");
-        trailingWhitespace2.appendChild(leadingWhitespace2);
-        leadingWhitespace2.appendChild(doc2.createElement("innerWhitespace"));
+        innerWhitespace2 = doc2.createElement("innerWhitespace");
+        trailingWhitespace2.appendChild(innerWhitespace2);
+        innerWhitespace2.appendChild(doc2.createElement("leadingAndTrailingWhitespace"));
     }
 
     @Before
@@ -107,13 +107,19 @@ public class XmlSemDiffTest {
     }
     
     @Test
-    public void testOrderCompare() {
+    public void testOrderElementEquals() {
         XmlSemDiffInterface diff = new XmlSemDiff();
         
-        assertTrue(diff.orderCompare(doc.getDocumentElement(), doc1.getDocumentElement(), true));
-        assertTrue(diff.orderCompare(doc.getDocumentElement(), doc1.getDocumentElement(), false));
-        assertTrue(diff.orderCompare(doc.getDocumentElement(), doc2.getDocumentElement(), true));
-        assertFalse(diff.orderCompare(doc.getDocumentElement(), doc2.getDocumentElement(), false));
+        assertTrue(diff.orderElementEquals(doc.getDocumentElement(), doc1.getDocumentElement()));
+        assertFalse(diff.orderElementEquals(doc.getDocumentElement(), doc2.getDocumentElement()));
+    }
+    
+    @Test
+    public void testElementEquals() {
+        XmlSemDiffInterface diff = new XmlSemDiff();
+        
+        //assertTrue(diff.elementEquals(doc.getDocumentElement(), doc1.getDocumentElement()));
+        assertFalse(diff.elementEquals(doc.getDocumentElement(), doc2.getDocumentElement()));
     }
 
 }
