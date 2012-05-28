@@ -115,13 +115,21 @@ public class SopXml {
         SopXml subor2 = newInstance(input2);
 
         XmlSemDiffInterface diff = new XmlSemDiff(whitespace);
-        boolean elementsEquality = diff.elementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
-        boolean orderEquality = true;
         if (elementOrder)
-            orderEquality = diff.orderElementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
-        if (elementsEquality && orderEquality) 
-            System.out.println("Soubory jsou shodné");
-        else System.out.println("Soubory jsou rozdílné");
-        if (verbosity) diff.differencies();
+            if (diff.orderElementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement())) {
+                System.out.println("Soubory jsou shodné");
+                return;
+            }
+            else {
+                System.out.println("Soubory jsou rozdílné");
+                if (verbosity) diff.differencies();
+                return;
+            }
+        if (diff.elementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement())) 
+                System.out.println("Soubory jsou shodné");
+        else {
+                System.out.println("Soubory jsou rozdílné");
+                if (verbosity) diff.differencies();
+        }
     }
   }

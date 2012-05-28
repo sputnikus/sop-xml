@@ -89,7 +89,7 @@ public class XmlSemDiffTest {
     public void testElementEquals() {
         XmlSemDiffInterface diff = new XmlSemDiff(0);
         
-        assertTrue(diff.elementEquals(doc.getDocumentElement(), doc1.getDocumentElement()));
+        assertTrue(diff.elementEquals(doc.getDocumentElement(), doc.getDocumentElement()));
         assertFalse(diff.elementEquals(doc.getDocumentElement(), doc2.getDocumentElement()));
     }
 
