@@ -1,5 +1,8 @@
 package sop.xml;
 
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 import org.w3c.dom.*;
 
 /**
@@ -10,9 +13,8 @@ import org.w3c.dom.*;
  */
 public class XmlSemDiff implements XmlSemDiffInterface {
 
-    public XmlSemDiff() {
-    }
-
+    private Set <String> strings = new TreeSet<String>();
+    
     @Override
     public boolean whitespaceCompare(Element elm1, Element elm2, boolean trimOrReplace) {
 
@@ -56,11 +58,15 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                     if (listA.item(i).getNodeName().equals(listB.item(i).getNodeName())) {
                         orderElementEquals((Element) listA.item(i), (Element) listB.item(i));
                     } else {
+                        strings.add(i+1 + ". element '" + listA.item(i).getNodeName()
+                                + "' není potomkem jednoho z uzlů '" + a.getNodeName()
+                                + "' nebo má jiné pořadí v uzlu druhého dokumentu.");
                         return false;
                     }
                 }
                 return true;
             } else {
+                strings.add("Počet potomků uzlu '" + a.getNodeName() + "' je různý.");
                 return false;
             }
         }
@@ -78,6 +84,8 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         NamedNodeMap attributesB = b.getAttributes();
 
         if ((attributesA.getLength()) != (attributesB.getLength())) {
+            strings.add("Elementy '" + a.getNodeName() + "' dvou dokumentů "
+                    + "mají různý počet atributů.");
             return false;
         }
         /*
@@ -121,19 +129,20 @@ public class XmlSemDiff implements XmlSemDiffInterface {
 
                 for (int i = 0; i < listA.getLength(); i++) {
                     for (int j = 0; j < listB.getLength(); j++) {
-                        if (listA.item(i).getNodeName().equals(listB.item(j).getNodeName())
-                                && diferentOrderOfAttributes((Element) listA.item(i), (Element) listB.item(j))) {
-                            countOfBool++;
+                        if (listA.item(i).getNodeName().equals(listB.item(j).getNodeName())) {
+                            if (diferentOrderOfAttributes((Element) listA.item(i), (Element) listB.item(j))) {
+                                countOfBool++;
 
-                            System.out.println(justChildNodes((Element) listB.item(j)).getLength());
-                            //removing child without children
-                            if (justChildNodes((Element) listB.item(j)).getLength() == 0) {
-                                System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
-                                checkHigherNodes(listA.item(i),listB.item(j));
-                            } else {
-                                //going further to the tree until find child without children
-                                elementEquals((Element) listA.item(i), (Element) listB.item(j));
-                            }
+                                System.out.println(justChildNodes((Element) listB.item(j)).getLength());
+                                //removing child without children
+                                if (justChildNodes((Element) listB.item(j)).getLength() == 0) {
+                                    System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
+                                    checkHigherNodes(listA.item(i), listB.item(j));
+                                } else {
+                                    //going further to the tree until find child without children
+                                    elementEquals((Element) listA.item(i), (Element) listB.item(j));
+                                }
+                            }break;
                         }
                         break;
                     }
@@ -194,5 +203,15 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         e.getParentNode().removeChild(e);
         //after removing child go higher in tree and check children again
         elementEquals(grannyNode1, grannyNode2);
+    }
+    
+    @Override
+    public void differencies(){
+        Iterator iterator;
+        iterator = strings.iterator();
+        while (iterator.hasNext()){
+            System.out.print(iterator.next() + " ");
+            System.out.println();
+        }
     }
 }
