@@ -27,16 +27,8 @@ public class XmlSemDiffTest {
     private static Element trailingWhitespace;
     private static Element leadingAndTrailingWhitespace;
     private static Element innerWhitespace;
-    
     private static Document doc1;
     private static Document doc2;
-    private static Element rootElement;
-    private static Element rootElement1;
-    private static Element rootElement2;
-    private static Element trailingWhitespace1;
-    private static Element trailingWhitespace2;
-    private static Element leadingAndTrailingWhitespace1;
-     private static Element innerWhitespace2;
     
     public XmlSemDiffTest() {
     }
@@ -45,38 +37,15 @@ public class XmlSemDiffTest {
     public static void setUpClass() throws Exception {
         dFact = DocumentBuilderFactory.newInstance();
         build = dFact.newDocumentBuilder();
-        doc = build.newDocument();
+        //doc = build.newDocument();
+        doc = build.parse("people.xml");
+        doc1 = build.parse("people.xml");
+        doc2 = build.parse("people1.xml");
+        
         leadingWhitespace = doc.createElement("leadingWhitespace");
         trailingWhitespace = doc.createElement("trailingWhitespace");
         leadingAndTrailingWhitespace = doc.createElement("leadingAndTrailingWhitespace");
         innerWhitespace = doc.createElement("innerWhitespace");
-        
-        rootElement = doc.createElement("rootElement");
-        doc.appendChild(rootElement);
-        rootElement.appendChild(leadingWhitespace);
-        rootElement.appendChild(trailingWhitespace);
-        trailingWhitespace.appendChild(leadingAndTrailingWhitespace);
-        leadingAndTrailingWhitespace.appendChild(innerWhitespace);
-        
-        doc1 = build.newDocument();
-        rootElement1 = doc1.createElement("rootElement");
-        doc1.appendChild(rootElement1);
-        rootElement1.appendChild(doc1.createElement("leadingWhitespace"));
-        trailingWhitespace1 = doc1.createElement("trailingWhitespace");
-        rootElement1.appendChild(trailingWhitespace1);
-        leadingAndTrailingWhitespace1 = doc1.createElement("leadingAndTrailingWhitespace");
-        trailingWhitespace1.appendChild(leadingAndTrailingWhitespace1);
-        leadingAndTrailingWhitespace1.appendChild(doc1.createElement("innerWhitespace"));
-        
-        doc2 = build.newDocument();
-        rootElement2 = doc2.createElement("rootElement");
-        doc2.appendChild(rootElement2);
-        rootElement2.appendChild(doc2.createElement("leadingWhitespace"));
-        trailingWhitespace2 = doc2.createElement("trailingWhitespace");
-        rootElement2.appendChild(trailingWhitespace2);
-        innerWhitespace2 = doc2.createElement("innerWhitespace");
-        trailingWhitespace2.appendChild(innerWhitespace2);
-        innerWhitespace2.appendChild(doc2.createElement("leadingAndTrailingWhitespace"));
     }
 
     @Before
@@ -95,6 +64,7 @@ public class XmlSemDiffTest {
         assertTrue(diff.whitespaceCompare(leadingWhitespace, leadingAndTrailingWhitespace, false));
         assertTrue(diff.whitespaceCompare(trailingWhitespace, leadingAndTrailingWhitespace, false));
         assertFalse(diff.whitespaceCompare(innerWhitespace, leadingAndTrailingWhitespace, false));
+    
     }
     
     @Test
@@ -104,6 +74,7 @@ public class XmlSemDiffTest {
         assertTrue(diff.whitespaceCompare(innerWhitespace, leadingWhitespace, true));
         assertTrue(diff.whitespaceCompare(innerWhitespace, trailingWhitespace, true));
         assertTrue(diff.whitespaceCompare(innerWhitespace, leadingAndTrailingWhitespace, true));
+    
     }
     
     @Test
@@ -118,7 +89,7 @@ public class XmlSemDiffTest {
     public void testElementEquals() {
         XmlSemDiffInterface diff = new XmlSemDiff();
         
-        //assertTrue(diff.elementEquals(doc.getDocumentElement(), doc1.getDocumentElement()));
+        assertTrue(diff.elementEquals(doc.getDocumentElement(), doc1.getDocumentElement()));
         assertFalse(diff.elementEquals(doc.getDocumentElement(), doc2.getDocumentElement()));
     }
 
