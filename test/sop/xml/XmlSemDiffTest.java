@@ -58,7 +58,7 @@ public class XmlSemDiffTest {
 
     @Test
     public void testLeadAndTrailWhitespaceCompare() {
-        XmlSemDiffInterface diff = new XmlSemDiff(0, false);
+        XmlSemDiffInterface diff = new XmlSemDiff(0);
         
         assertTrue(diff.whitespaceCompare(leadingWhitespace, trailingWhitespace, false));
         assertTrue(diff.whitespaceCompare(leadingWhitespace, leadingAndTrailingWhitespace, false));
@@ -69,7 +69,7 @@ public class XmlSemDiffTest {
     
     @Test
     public void testInnerWhitespaceCompare() {
-        XmlSemDiffInterface diff = new XmlSemDiff(0, false);
+        XmlSemDiffInterface diff = new XmlSemDiff(0);
         
         assertTrue(diff.whitespaceCompare(innerWhitespace, leadingWhitespace, true));
         assertTrue(diff.whitespaceCompare(innerWhitespace, trailingWhitespace, true));
@@ -79,7 +79,7 @@ public class XmlSemDiffTest {
     
     @Test
     public void testOrderElementEquals() {
-        XmlSemDiffInterface diff = new XmlSemDiff(0, false);
+        XmlSemDiffInterface diff = new XmlSemDiff(0);
         
         assertTrue(diff.orderElementEquals(doc.getDocumentElement(), doc1.getDocumentElement()));
         assertFalse(diff.orderElementEquals(doc.getDocumentElement(), doc2.getDocumentElement()));
@@ -87,7 +87,7 @@ public class XmlSemDiffTest {
     
     @Test
     public void testElementEquals() {
-        XmlSemDiffInterface diff = new XmlSemDiff(0, false);
+        XmlSemDiffInterface diff = new XmlSemDiff(0);
         
         assertTrue(diff.elementEquals(doc.getDocumentElement(), doc1.getDocumentElement()));
         assertFalse(diff.elementEquals(doc.getDocumentElement(), doc2.getDocumentElement()));

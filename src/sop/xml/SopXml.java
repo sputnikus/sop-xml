@@ -25,8 +25,8 @@ public class SopXml {
             + "Options:\n"
             + "\t-h       : This help message\n"
             + "\t-v       : Verbose output\n"
-            + "\t-o       : Sets element order ignoring flag\n"
-            + "\t-w {1,2} : Whitespace ignoring flag (1 - triming, 2 - full replace)\n";
+            + "\t-o       : Sets element order awareness flag\n"
+            + "\t-w {1,2} : Sets whitespace ignoring flag (1 - triming, 2 - full replace)\n";
     
     public static SopXml newInstance(URI uri) throws SAXException,
         ParserConfigurationException, IOException {
@@ -114,9 +114,14 @@ public class SopXml {
         SopXml subor1 = newInstance(input1);
         SopXml subor2 = newInstance(input2);
 
-        XmlSemDiffInterface diff = new XmlSemDiff(whitespace, verbosity);
-        diff.elementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
-        diff.orderElementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
-        diff.differencies();
+        XmlSemDiffInterface diff = new XmlSemDiff(whitespace);
+        boolean elementsEquality = diff.elementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
+        boolean orderEquality = true;
+        if (elementOrder)
+            orderEquality = diff.orderElementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
+        if (elementsEquality && orderEquality) 
+            System.out.println("Soubory jsou shodné");
+        else System.out.println("Soubory jsou rozdílné");
+        if (verbosity) diff.differencies();
     }
   }

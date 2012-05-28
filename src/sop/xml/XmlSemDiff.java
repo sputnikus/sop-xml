@@ -14,12 +14,10 @@ import org.w3c.dom.*;
 public class XmlSemDiff implements XmlSemDiffInterface {
     
     private int whitespaceSettings;
-    private boolean verbositySettings;
     private Set <String> strings = new TreeSet<String>();
     
-    public XmlSemDiff(int whitespaceParam, boolean verbosityParam) {
+    public XmlSemDiff(int whitespaceParam) {
         whitespaceSettings = whitespaceParam;
-        verbositySettings = verbosityParam;
     }
 
     @Override
