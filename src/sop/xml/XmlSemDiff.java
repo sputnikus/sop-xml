@@ -14,7 +14,7 @@ public class XmlSemDiff implements XmlSemDiffInterface {
     }
 
     @Override
-    public boolean whitespaceCompare(Element elm1, Element elm2, boolean trimOrReplace) throws NullPointerException {
+    public boolean whitespaceCompare(Element elm1, Element elm2, boolean trimOrReplace) {
 
         if (elm1 == null || elm2 == null) {
             throw new NullPointerException("Null parameter");
@@ -50,12 +50,12 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         } else {
             NodeList listA = justChildNodes(a);
             NodeList listB = justChildNodes(b);
-            
+
             if (listA.getLength() == listB.getLength()) {
                 for (int i = 0; i < listA.getLength(); i++) {
                     if (listA.item(i).getNodeName().equals(listB.item(i).getNodeName())) {
                         orderElementEquals((Element) listA.item(i), (Element) listB.item(i));
-                    }else{
+                    } else {
                         return false;
                     }
                 }
@@ -76,18 +76,21 @@ public class XmlSemDiff implements XmlSemDiffInterface {
     private boolean diferentOrderOfAttributes(Element a, Element b) {
         NamedNodeMap attributesA = a.getAttributes();
         NamedNodeMap attributesB = b.getAttributes();
+
         if ((attributesA.getLength()) != (attributesB.getLength())) {
             return false;
         }
-        if (!a.getTextContent().equals(b.getTextContent())) {
+        /*
+        if (!a.getTextContent().equals(b.getTextContent())) { 
             return false;
-        }
+        }*/
         int j = 0;
         int s = 0;
-        
+
         for (int i = 0; i < attributesA.getLength(); i++) {
             for (int h = 0; h < attributesB.getLength(); h++) {
-                if (attributesA.item(i).equals(attributesB.item(h))) {
+                if (attributesA.item(i).getNodeName().equals(attributesB.item(h).getNodeName())
+                        && attributesA.item(i).getNodeValue().equals(attributesB.item(h).getNodeValue())) {
                     j++;
                 }
                 if (j >= 1) {
@@ -112,44 +115,40 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         } else {
             NodeList listA = justChildNodes(a);
             NodeList listB = justChildNodes(b);
-                
+
             if (listA.getLength() == listA.getLength()) {
                 int countOfBool = 0;
 
                 for (int i = 0; i < listA.getLength(); i++) {
                     for (int j = 0; j < listB.getLength(); j++) {
-                        if (listA.item(i).getNodeName().equals(listB.item(j).getNodeName())) {
+                        if (listA.item(i).getNodeName().equals(listB.item(j).getNodeName())
+                                && diferentOrderOfAttributes((Element) listA.item(i), (Element) listB.item(j))) {
                             countOfBool++;
-                            
+
                             //System.out.println(justChildNodes((Element) listB.item(j)).getLength());
                             //removing child without children
                             if (justChildNodes((Element) listB.item(j)).getLength() == 0) {
-                                
+
                                 //System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
                                 Element grannyNode1 = null;
                                 Element grannyNode2 = null;
                                 Element rootEl = (Element) listB.item(j).getOwnerDocument().getDocumentElement();
-                                
+
                                 //setting to grannyNode parent or grandparent node
                                 for (int n = 0; n < justChildNodes(rootEl).getLength(); n++) {
                                     if (justChildNodes(rootEl).item(n).getNodeName().equals(listB.item(j).getNodeName())) {
                                         grannyNode1 = (Element) listA.item(i).getParentNode();
                                         grannyNode2 = (Element) listB.item(j).getParentNode();
-                                     } else {
+                                    } else {
                                         grannyNode1 = (Element) listA.item(i).getParentNode().getParentNode();
                                         grannyNode2 = (Element) listB.item(j).getParentNode().getParentNode();
-                                     }
+                                    }
                                 }
                                 Element e = (Element) listB.item(j);
-                                
-                                //check attributes before removing child...still problem coz "!" shouldn't be there
-                                if (!diferentOrderOfAttributes((Element) listA.item(i), (Element) listB.item(j))) {
-                                    e.getParentNode().removeChild(e);
-                                    //after removing child go higher in tree and check children again
-                                    elementEquals(grannyNode1, grannyNode2);
-                                 } else {
-                                    return false;
-                                }
+
+                                e.getParentNode().removeChild(e);
+                                //after removing child go higher in tree and check children again
+                                elementEquals(grannyNode1, grannyNode2);
                                 //going further to the tree until find child without children
                             } else {
                                 elementEquals((Element) listA.item(i), (Element) listB.item(j));
@@ -177,7 +176,7 @@ public class XmlSemDiff implements XmlSemDiffInterface {
      */
     private NodeList justChildNodes(Element e) {
         NodeList list = e.getChildNodes();
-        
+
         for (int i = 0; list.item(i) != null; i++) {
             Node n = list.item(i);
             if (n instanceof Text || n instanceof Comment) {
