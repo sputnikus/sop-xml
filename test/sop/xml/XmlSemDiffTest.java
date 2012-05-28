@@ -3,8 +3,8 @@ package sop.xml;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -58,7 +58,7 @@ public class XmlSemDiffTest {
 
     @Test
     public void testLeadAndTrailWhitespaceCompare() {
-        XmlSemDiffInterface diff = new XmlSemDiff();
+        XmlSemDiffInterface diff = new XmlSemDiff(0, false);
         
         assertTrue(diff.whitespaceCompare(leadingWhitespace, trailingWhitespace, false));
         assertTrue(diff.whitespaceCompare(leadingWhitespace, leadingAndTrailingWhitespace, false));
@@ -69,7 +69,7 @@ public class XmlSemDiffTest {
     
     @Test
     public void testInnerWhitespaceCompare() {
-        XmlSemDiffInterface diff = new XmlSemDiff();
+        XmlSemDiffInterface diff = new XmlSemDiff(0, false);
         
         assertTrue(diff.whitespaceCompare(innerWhitespace, leadingWhitespace, true));
         assertTrue(diff.whitespaceCompare(innerWhitespace, trailingWhitespace, true));
@@ -79,7 +79,7 @@ public class XmlSemDiffTest {
     
     @Test
     public void testOrderElementEquals() {
-        XmlSemDiffInterface diff = new XmlSemDiff();
+        XmlSemDiffInterface diff = new XmlSemDiff(0, false);
         
         assertTrue(diff.orderElementEquals(doc.getDocumentElement(), doc1.getDocumentElement()));
         assertFalse(diff.orderElementEquals(doc.getDocumentElement(), doc2.getDocumentElement()));
@@ -87,7 +87,7 @@ public class XmlSemDiffTest {
     
     @Test
     public void testElementEquals() {
-        XmlSemDiffInterface diff = new XmlSemDiff();
+        XmlSemDiffInterface diff = new XmlSemDiff(0, false);
         
         assertTrue(diff.elementEquals(doc.getDocumentElement(), doc1.getDocumentElement()));
         assertFalse(diff.elementEquals(doc.getDocumentElement(), doc2.getDocumentElement()));
