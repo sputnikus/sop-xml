@@ -114,7 +114,7 @@ public class SopXml {
         SopXml subor1 = newInstance(input1);
         SopXml subor2 = newInstance(input2);
 
-        XmlSemDiffInterface diff = new XmlSemDiff(whitespace);
+        XmlSemDiffInterface diff = new XmlSemDiff(whitespace, verbosity);
         diff.elementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
         if (elementOrder) {
             diff.orderElementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
