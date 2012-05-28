@@ -136,11 +136,11 @@ public class XmlSemDiff implements XmlSemDiffInterface {
             if (whitespaceSettings == 2) 
                 whitespaceComparison = whitespaceCompare(a, b, true);
             return whitespaceComparison && diferentOrderOfAttributes(a, b);
-        } else if (a.getFirstChild() != null && b.getFirstChild() != null) {
+        } else {
             NodeList listA = justChildNodes(a);
             NodeList listB = justChildNodes(b);
 
-            if (listA.getLength() == listA.getLength()) {
+            if (listA.getLength() == listB.getLength()) {
                 int countOfBool = 0;
 
                 for (int i = 0; i < listA.getLength(); i++) {
@@ -158,7 +158,8 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                                     //going further to the tree until find child without children
                                     elementEquals((Element) listA.item(i), (Element) listB.item(j));
                                 }
-                            }break;
+                            }
+                            break;
                         }
                         break;
                     }
@@ -172,7 +173,6 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                 return false;
             }
         }
-        return false;
     }
 
     /**
