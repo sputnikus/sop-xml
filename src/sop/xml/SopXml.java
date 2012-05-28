@@ -67,6 +67,7 @@ public class SopXml {
 
         XmlSemDiffInterface diff = new XmlSemDiff();
         diff.elementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
-        diff.orderElementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
+        //diff.orderElementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement());
+        diff.differencies();
     }
   }
