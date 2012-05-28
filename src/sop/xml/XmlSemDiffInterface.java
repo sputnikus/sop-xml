@@ -43,4 +43,9 @@ public interface XmlSemDiffInterface {
      * @return True if elements have same names, false otherwise
      */
     boolean elementEquals(Element a, Element b);
+    
+    /**
+     * Print set of differencies between two xml documents
+     */
+    void differencies();  
 }
