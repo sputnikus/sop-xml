@@ -107,6 +107,7 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                 }
                 if (j >= 1) {
                     s++;
+                    j = 0;
                 }
             }
         }
