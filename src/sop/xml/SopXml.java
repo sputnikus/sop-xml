@@ -117,7 +117,7 @@ public class SopXml {
         XmlSemDiffInterface diff = new XmlSemDiff(whitespace);
         if (elementOrder)
             if (diff.orderElementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement())) {
-                System.out.println("Soubory jsou shodné");
+                System.out.println("Soubory jsou podobné");
                 return;
             }
             else {

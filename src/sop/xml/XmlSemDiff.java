@@ -211,8 +211,14 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                 grannyNode1 = (Element) a.getParentNode();
                 grannyNode2 = (Element) b.getParentNode();
             } else {
-                grannyNode1 = (Element) a.getParentNode().getParentNode();
-                grannyNode2 = (Element) b.getParentNode().getParentNode();
+                try {
+                    grannyNode1 = (Element) a.getParentNode().getParentNode();
+                    grannyNode2 = (Element) b.getParentNode().getParentNode();
+                } catch (ClassCastException e) {
+                    grannyNode1 = (Element) a.getParentNode();
+                    grannyNode2 = (Element) b.getParentNode();
+                }
+                
             }
         }
         Element e = (Element) b;
