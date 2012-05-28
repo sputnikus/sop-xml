@@ -19,6 +19,14 @@ import org.xml.sax.SAXException;
 public class SopXml {
     
     private Document doc;
+    private static final String CLI_HELP = 
+              "SopXml - semantic XML comparator\n"
+            + "Usage: java -jar sop-xml.jar [OPTIONS] FIRST_XML SECOND_XML\n"
+            + "Options:\n"
+            + "\t-h       : This help message\n"
+            + "\t-v       : Verbose output\n"
+            + "\t-o       : Sets element order flag\n"
+            + "\t-w {1,2} : Whitespace flag (1 - triming, 2 - full replace)\n";
     
     public static SopXml newInstance(URI uri) throws SAXException,
         ParserConfigurationException, IOException {
@@ -52,16 +60,57 @@ public class SopXml {
      */
     public static void main(String[] args) throws IOException, SAXException, 
             ParserConfigurationException, TransformerException {
-        if (args.length < 1) {
-            System.err.println("Firts document expected!");
-            return;
-        } else if (args.length < 2) {
-            System.err.println("Second document expected!");
-            return;
+        boolean verbosity = false;
+        boolean elementOrder = false;
+        int whitespace = 0;
+        String file1 = null;
+        String file2 = null;
+        int argsLength = args.length;
+        if (argsLength < 2) {
+            System.out.println(CLI_HELP);
+            System.exit(0);
         }
         
-        File input1 = new File(args[0]);
-        File input2 = new File(args[1]);
+        for(int i = 0; i < argsLength; i++) {
+            if (args[i].equals("-h")) {
+                System.out.println(CLI_HELP);
+                return;
+            }
+            else if (args[i].equals("-v")) {
+                verbosity = true;
+            }
+            else if (args[i].equals("-o")) {
+                elementOrder = true;
+            }
+            else if (args[i].equals("-w")) {
+                i++;
+                try {
+                    whitespace = Integer.parseInt(args[i]);
+                } catch (NumberFormatException e) {
+                    System.err.println("Whitespace option must be an integer!");
+                    System.out.println(CLI_HELP);
+                    System.exit(1);
+                }
+                if (whitespace < 0 || whitespace > 2) {
+                    System.err.println("Whitespace option must be in <0,2>!");
+                    System.out.println(CLI_HELP);
+                    System.exit(1);
+                }
+            }
+            else {
+                if (file1 == null) file1 = args[i];
+                else file2 = args[i];
+            }
+        }
+        
+        if (file1 == null || file2 == null) {
+            System.err.println("You must pass both files!");
+            System.out.println(CLI_HELP);
+            System.exit(1);
+        }
+        
+        File input1 = new File(file1);
+        File input2 = new File(file2);
         SopXml subor1 = newInstance(input1);
         SopXml subor2 = newInstance(input2);
 
