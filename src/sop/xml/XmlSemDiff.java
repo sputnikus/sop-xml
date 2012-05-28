@@ -16,6 +16,11 @@ public class XmlSemDiff implements XmlSemDiffInterface {
     private int whitespaceSettings;
     private Set <String> strings = new TreeSet<String>();
     
+    /**
+     * Constructor with setting of whitespace ignoring flag
+     * 
+     * @param whitespaceParam whitespace ignoring flag
+     */
     public XmlSemDiff(int whitespaceParam) {
         whitespaceSettings = whitespaceParam;
     }
