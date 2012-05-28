@@ -81,9 +81,9 @@ public class XmlSemDiff implements XmlSemDiffInterface {
             return false;
         }
         /*
-        if (!a.getTextContent().equals(b.getTextContent())) { 
-            return false;
-        }*/
+         * if (!a.getTextContent().equals(b.getTextContent())) { return false;
+        }
+         */
         int j = 0;
         int s = 0;
 
@@ -125,32 +125,13 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                                 && diferentOrderOfAttributes((Element) listA.item(i), (Element) listB.item(j))) {
                             countOfBool++;
 
-                            //System.out.println(justChildNodes((Element) listB.item(j)).getLength());
+                            System.out.println(justChildNodes((Element) listB.item(j)).getLength());
                             //removing child without children
                             if (justChildNodes((Element) listB.item(j)).getLength() == 0) {
-
-                                //System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
-                                Element grannyNode1 = null;
-                                Element grannyNode2 = null;
-                                Element rootEl = (Element) listB.item(j).getOwnerDocument().getDocumentElement();
-
-                                //setting to grannyNode parent or grandparent node
-                                for (int n = 0; n < justChildNodes(rootEl).getLength(); n++) {
-                                    if (justChildNodes(rootEl).item(n).getNodeName().equals(listB.item(j).getNodeName())) {
-                                        grannyNode1 = (Element) listA.item(i).getParentNode();
-                                        grannyNode2 = (Element) listB.item(j).getParentNode();
-                                    } else {
-                                        grannyNode1 = (Element) listA.item(i).getParentNode().getParentNode();
-                                        grannyNode2 = (Element) listB.item(j).getParentNode().getParentNode();
-                                    }
-                                }
-                                Element e = (Element) listB.item(j);
-
-                                e.getParentNode().removeChild(e);
-                                //after removing child go higher in tree and check children again
-                                elementEquals(grannyNode1, grannyNode2);
-                                //going further to the tree until find child without children
+                                System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
+                                checkHigherNodes(listA.item(i),listB.item(j));
                             } else {
+                                //going further to the tree until find child without children
                                 elementEquals((Element) listA.item(i), (Element) listB.item(j));
                             }
                         }
@@ -185,5 +166,33 @@ public class XmlSemDiff implements XmlSemDiffInterface {
             }
         }
         return list;
+    }
+
+    /**
+     * Choose higher nodes and compare them after removing checked node
+     *
+     * @param a First node to compare
+     * @param b Second node to compare
+     */
+    private void checkHigherNodes(Node a, Node b) {
+        Element grannyNode1 = null;
+        Element grannyNode2 = null;
+        Element rootEl = (Element) b.getOwnerDocument().getDocumentElement();
+
+        //setting to grannyNode parent or grandparent node
+        for (int n = 0; n < justChildNodes(rootEl).getLength(); n++) {
+            if (justChildNodes(rootEl).item(n).getNodeName().equals(b.getNodeName())) {
+                grannyNode1 = (Element) a.getParentNode();
+                grannyNode2 = (Element) b.getParentNode();
+            } else {
+                grannyNode1 = (Element) a.getParentNode().getParentNode();
+                grannyNode2 = (Element) b.getParentNode().getParentNode();
+            }
+        }
+        Element e = (Element) b;
+
+        e.getParentNode().removeChild(e);
+        //after removing child go higher in tree and check children again
+        elementEquals(grannyNode1, grannyNode2);
     }
 }
