@@ -18,7 +18,6 @@ public class XmlSemDiff implements XmlSemDiffInterface {
 
     @Override
     public boolean whitespaceCompare(Element elm1, Element elm2, boolean trimOrReplace) {
-
         if (elm1 == null || elm2 == null) {
             throw new NullPointerException("Null parameter");
         }
@@ -113,9 +112,15 @@ public class XmlSemDiff implements XmlSemDiffInterface {
             throw new NullPointerException("Element 2");
         }
 
-        if (a.getFirstChild() == null) {
-            return diferentOrderOfAttributes(a, b);
-        } else {
+        // elements without childrens, compare attributes and whitespaces (if set)
+        if (a.getFirstChild() == null && b.getFirstChild() == null) {
+            boolean whitespaceComparison = false;
+            if (whitespaceSettings == 1) 
+                whitespaceComparison = whitespaceCompare(a, b, false);
+            if (whitespaceSettings == 2) 
+                whitespaceComparison = whitespaceCompare(a, b, true);
+            return whitespaceComparison && diferentOrderOfAttributes(a, b);
+        } else if (a.getFirstChild() != null && b.getFirstChild() != null) {
             NodeList listA = justChildNodes(a);
             NodeList listB = justChildNodes(b);
 
@@ -150,6 +155,7 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                 return false;
             }
         }
+        return false;
     }
 
     /**
