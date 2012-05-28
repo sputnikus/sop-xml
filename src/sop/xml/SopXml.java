@@ -20,7 +20,7 @@ public class SopXml {
     
     private Document doc;
     private static final String CLI_HELP = 
-              "SopXml - semantic XML comparator\n"
+              "SopXml - Semantic XML comparator\n"
             + "Usage: java -jar sop-xml.jar [OPTIONS] FIRST_XML SECOND_XML\n"
             + "Options:\n"
             + "\t-h       : This help message\n"
