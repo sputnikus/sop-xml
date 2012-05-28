@@ -28,8 +28,8 @@ public interface XmlSemDiffInterface {
     /**
      * Compare names of elements of two documents in terms of their order
      * 
-     * @param rootEl1 First element to compare
-     * @param rootEl2 Second element to compare
+     * @param a First element to compare
+     * @param b Second element to compare
      * @return True if elements have same names and same order or document is similar despite of 
      *      different order, false otherwise
      */
@@ -38,8 +38,8 @@ public interface XmlSemDiffInterface {
     /**
      * Compare names of elements of two documents
      * 
-     * @param rootEl1 First element to compare
-     * @param rootEl2 Second element to compare
+     * @param a First element to compare
+     * @param b Second element to compare
      * @return True if elements have same names, false otherwise
      */
     boolean elementEquals(Element a, Element b);

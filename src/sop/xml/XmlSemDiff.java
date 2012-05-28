@@ -16,6 +16,11 @@ public class XmlSemDiff implements XmlSemDiffInterface {
     private int whitespaceSettings;
     private Set <String> strings = new TreeSet<String>();
     
+    /**
+     * Constructor with setting of whitespace ignoring flag
+     * 
+     * @param whitespaceParam whitespace ignoring flag
+     */
     public XmlSemDiff(int whitespaceParam) {
         whitespaceSettings = whitespaceParam;
     }
@@ -76,13 +81,6 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         }
     }
 
-    /**
-     * Compare order of attributes in two elements
-     *
-     * @param a First element to compare
-     * @param b Second element to compare
-     * @return True, if order of attributes is equal, false otherwise
-     */
     private boolean diferentOrderOfAttributes(Element a, Element b) {
         NamedNodeMap attributesA = a.getAttributes();
         NamedNodeMap attributesB = b.getAttributes();
@@ -169,12 +167,6 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         return false;
     }
 
-    /**
-     * Return NodeList with elements children
-     *
-     * @param a First element to compare
-     * @return NodeList without #text and #comment node
-     */
     private NodeList justChildNodes(Element e) {
         NodeList list = e.getChildNodes();
 
@@ -188,12 +180,6 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         return list;
     }
 
-    /**
-     * Choose higher nodes and compare them after removing checked node
-     *
-     * @param a First node to compare
-     * @param b Second node to compare
-     */
     private void checkHigherNodes(Node a, Node b) {
         Element grannyNode1 = null;
         Element grannyNode2 = null;
