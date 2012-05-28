@@ -23,12 +23,12 @@ public class XmlSemDiffTest {
     private static DocumentBuilderFactory dFact;
     private static DocumentBuilder build;
     private static Document doc;
+    private static Document doc1;
+    private static Document doc2;
     private static Element leadingWhitespace;
     private static Element trailingWhitespace;
     private static Element leadingAndTrailingWhitespace;
     private static Element innerWhitespace;
-    private static Document doc1;
-    private static Document doc2;
     
     public XmlSemDiffTest() {
     }
@@ -38,9 +38,9 @@ public class XmlSemDiffTest {
         dFact = DocumentBuilderFactory.newInstance();
         build = dFact.newDocumentBuilder();
         //doc = build.newDocument();
-        doc = build.parse("people.xml");
-        doc1 = build.parse("people.xml");
-        doc2 = build.parse("people1.xml");
+        doc = build.parse("test1.xml");
+        doc1 = build.parse("test2.xml");
+        doc2 = build.parse("test3.xml");
         
         leadingWhitespace = doc.createElement("leadingWhitespace");
         trailingWhitespace = doc.createElement("trailingWhitespace");
