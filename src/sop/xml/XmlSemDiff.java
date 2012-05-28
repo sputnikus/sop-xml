@@ -9,8 +9,11 @@ import org.w3c.dom.*;
  * @version 24052012
  */
 public class XmlSemDiff implements XmlSemDiffInterface {
+    
+    private int whitespaceSettings;
 
-    public XmlSemDiff() {
+    public XmlSemDiff(int whitespaceParam) {
+        whitespaceSettings = whitespaceParam;
     }
 
     @Override
