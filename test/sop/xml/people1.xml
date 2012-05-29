@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<people>
+    <person id="1"> 		 <!-- id je povinný atribut a je to unikátní celé číslo
+				      (nemohou být dvě stejná id) -->
+        <name>Pavel</name>	 
+        <salary>12000.00</salary>   
+        <surname>Novák</surname> 
+        <note>Poznámka</note>    
+        <cars>			 <!-- cars obsahuje libovolný počet elementů car -->
+            <car id="ZNC 33-93"> 
+                <type>Škoda 120 GLX</type> <!-- type může obsahovat libovolný řetězec -->
+                <fuel>gasoline</fuel>      
+                <year>1985</year>	   
+                <country>cz</country>	   
+                <price>15000</price>        
+            </car>
+            <car id="6B6 82-51">
+                <type>Škoda Octavia Combi</type>
+                <fuel>UNKNOWN</fuel>
+                <year>2009</year>
+                <country>cz</country>
+                <price>200000</price>
+            </car>
+        </cars>
+    </person>
+
+    <person id="2">
+        <name>Libor</name>
+        <surname>Polák</surname>
+        <salary>9000.00</salary>
+        <cars>
+            <car id="ZNH 28-51">
+                <type>Škoda Octavia Combi</type>
+                <fuel>diesel</fuel>
+                <year>2001</year>
+                <country>cz</country>
+                <price>50000</price>
+            </car>
+        </cars>
+    </person>
+
+    <person id="3">
+        <name>Jan</name>
+        <surname>Hroza</surname>
+        <salary>68475.25</salary>
+
+        <cars>
+            <car id="ZNE 11-75">
+                <type>Škoda Favorit</type>
+                <fuel>lpg</fuel>
+                <year>1995</year>
+                <country>cz</country>
+            </car>
+            <car id="ZN 85-51">
+                <type>Prototyp č. 1 vyrobený v dílně Franty Vomáčky</type>
+                <fuel>electricity</fuel>
+                <year>1995</year>
+                <country>cz</country>
+            </car>
+        </cars>
+    </person>
+    <person></person>
+
+</people>
