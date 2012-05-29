@@ -62,12 +62,14 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         } else {
             NodeList listA = justChildNodes(a);
             NodeList listB = justChildNodes(b);
+            
+            boolean returnValue = true;
 
             if (listA.getLength() == listB.getLength()) {
                 for (int i = 0; i < listA.getLength(); i++) {
                     if (listA.item(i).getNodeName().equals(listB.item(i).getNodeName())) {
                         if (diferentOrderOfAttributes(a, b)) {
-                            orderElementEquals((Element) listA.item(i), (Element) listB.item(i));
+                            returnValue &= orderElementEquals((Element) listA.item(i), (Element) listB.item(i));
                         } else {
                             return false;
                         }
@@ -78,7 +80,7 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                         return false;
                     }
                 }
-                return true;
+                return returnValue;
             } else {
                 strings.add("Počet potomků uzlu '" + a.getNodeName() + "' je různý.");
                 return false;
@@ -183,10 +185,8 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                     }
                 }
                 if (countOfBool == 1) {
-                    System.out.println(countOfBool + " true");
                     return true;
                 } else {
-                    System.out.println(countOfBool + "  false");
                     strings.add("Elementy '" + a.getNodeName() + "' dvou dokumentů neobsahují stejné potomky.");
                     return false;
                 }
