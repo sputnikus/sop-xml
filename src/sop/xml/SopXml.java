@@ -17,36 +17,36 @@ import org.xml.sax.SAXException;
  * @version 24052012
  */
 public class SopXml {
-
+    
     private Document doc;
-    private static final String CLI_HELP =
-            "SopXml - Semantic XML comparator\n"
+    private static final String CLI_HELP = 
+              "SopXml - Semantic XML comparator\n"
             + "Usage: java -jar sop-xml.jar [OPTIONS] FIRST_XML SECOND_XML\n"
             + "Options:\n"
             + "\t-h       : This help message\n"
             + "\t-v       : Verbose output\n"
             + "\t-o       : Sets element order awareness flag\n"
             + "\t-w {1,2} : Sets whitespace ignoring flag (1 - triming, 2 - full replace)\n";
-
+    
     public static SopXml newInstance(URI uri) throws SAXException,
-            ParserConfigurationException, IOException {
+        ParserConfigurationException, IOException {
         return new SopXml(uri);
     }
-
+    
     public static SopXml newInstance(File file)
             throws SAXException, ParserConfigurationException, IOException {
         return newInstance(file.toURI());
     }
-
+  
     /**
      * Constructor creates new instance of SopXml class reading two documents at
      * given URIs
-     *
+     * 
      * @param uri1 URI of the first document
      * @param uri2 URI of the second document
      * @throws SAXException
      * @throws ParserConfigurationException
-     * @throws IOException
+     * @throws IOException 
      */
     private SopXml(URI uri) throws SAXException, ParserConfigurationException,
             IOException {
@@ -58,7 +58,7 @@ public class SopXml {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException, SAXException,
+    public static void main(String[] args) throws IOException, SAXException, 
             ParserConfigurationException, TransformerException {
         boolean verbosity = false;
         boolean elementOrder = false;
@@ -70,16 +70,19 @@ public class SopXml {
             System.out.println(CLI_HELP);
             System.exit(0);
         }
-
-        for (int i = 0; i < argsLength; i++) {
+        
+        for(int i = 0; i < argsLength; i++) {
             if (args[i].equals("-h")) {
                 System.out.println(CLI_HELP);
                 return;
-            } else if (args[i].equals("-v")) {
+            }
+            else if (args[i].equals("-v")) {
                 verbosity = true;
-            } else if (args[i].equals("-o")) {
+            }
+            else if (args[i].equals("-o")) {
                 elementOrder = true;
-            } else if (args[i].equals("-w")) {
+            }
+            else if (args[i].equals("-w")) {
                 i++;
                 try {
                     whitespace = Integer.parseInt(args[i]);
@@ -93,46 +96,40 @@ public class SopXml {
                     System.out.println(CLI_HELP);
                     System.exit(1);
                 }
-            } else {
-                if (file1 == null) {
-                    file1 = args[i];
-                } else {
-                    file2 = args[i];
-                }
+            }
+            else {
+                if (file1 == null) file1 = args[i];
+                else file2 = args[i];
             }
         }
-
+        
         if (file1 == null || file2 == null) {
             System.err.println("You must pass both files!");
             System.out.println(CLI_HELP);
             System.exit(1);
         }
-
+        
         File input1 = new File(file1);
         File input2 = new File(file2);
         SopXml subor1 = newInstance(input1);
         SopXml subor2 = newInstance(input2);
 
         XmlSemDiffInterface diff = new XmlSemDiff(whitespace);
-        if (elementOrder) {
+        if (elementOrder)
             if (diff.orderElementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement())) {
                 System.out.println("Soubory jsou podobné");
                 return;
-            } else {
+            }
+            else {
                 System.out.println("Soubory jsou rozdílné");
-                if (verbosity) {
-                    diff.differencies();
-                }
+                if (verbosity) diff.differencies();
                 return;
             }
-        }
-        if (diff.elementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement())) {
-            System.out.println("Soubory jsou shodné");
-        } else {
-            System.out.println("Soubory jsou rozdílné");
-            if (verbosity) {
-                diff.differencies();
-            }
+        if (diff.elementEquals(subor1.doc.getDocumentElement(), subor2.doc.getDocumentElement())) 
+                System.out.println("Soubory jsou shodné");
+        else {
+                System.out.println("Soubory jsou rozdílné");
+                if (verbosity) diff.differencies();
         }
     }
-}
+  }
