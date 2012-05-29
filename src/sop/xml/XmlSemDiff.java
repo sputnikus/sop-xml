@@ -12,13 +12,14 @@ import org.w3c.dom.*;
  * @version 24052012
  */
 public class XmlSemDiff implements XmlSemDiffInterface {
-    
+
     private int whitespaceSettings;
-    private Set <String> strings = new TreeSet<String>();
-    
+    private Set<String> strings = new TreeSet<String>();
+    private Set<String> sda = new TreeSet<String>();
+
     /**
      * Constructor with setting of whitespace ignoring flag
-     * 
+     *
      * @param whitespaceParam whitespace ignoring flag
      */
     public XmlSemDiff(int whitespaceParam) {
@@ -65,9 +66,13 @@ public class XmlSemDiff implements XmlSemDiffInterface {
             if (listA.getLength() == listB.getLength()) {
                 for (int i = 0; i < listA.getLength(); i++) {
                     if (listA.item(i).getNodeName().equals(listB.item(i).getNodeName())) {
-                        orderElementEquals((Element) listA.item(i), (Element) listB.item(i));
+                        if (diferentOrderOfAttributes(a, b)) {
+                            orderElementEquals((Element) listA.item(i), (Element) listB.item(i));
+                        } else {
+                            return false;
+                        }
                     } else {
-                        strings.add(i+1 + ". element '" + listA.item(i).getNodeName()
+                        strings.add(i + 1 + ". element '" + listA.item(i).getNodeName()
                                 + "' není potomkem jednoho z uzlů '" + a.getNodeName()
                                 + "' nebo má jiné pořadí v uzlu druhého dokumentu.");
                         return false;
@@ -93,13 +98,12 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         NamedNodeMap attributesB = b.getAttributes();
 
         if ((attributesA.getLength()) != (attributesB.getLength())) {
-            strings.add("Elementy '" + a.getNodeName() + "' dvou dokumentů "
+            sda.add("Elementy '" + a.getNodeName() + "' dvou dokumentů "
                     + "mají různý počet atributů.");
             return false;
         }
         /*
-         * if (!a.getTextContent().equals(b.getTextContent())) { return false;
-        }
+         * if (!a.getTextContent().equals(b.getTextContent())) { return false; }
          */
         int j = 0;
         int s = 0;
@@ -116,7 +120,13 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                 }
             }
         }
-        return s == attributesA.getLength();
+        if (s == attributesA.getLength()) {
+            return true;
+        } else {
+            sda.add("Elementy '" + a.getNodeName() + "' dvou dokumentů "
+                    + "mají různé atributy.");
+            return false;
+        }
     }
 
     @Override
@@ -131,16 +141,19 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         // elements without childrens, compare attributes and whitespaces (if set)
         if (a.getFirstChild() == null && b.getFirstChild() == null) {
             boolean whitespaceComparison = false;
-            if (whitespaceSettings == 1) 
+            if (whitespaceSettings == 1) {
                 whitespaceComparison = whitespaceCompare(a, b, false);
-            if (whitespaceSettings == 2) 
+            }
+            if (whitespaceSettings == 2) {
                 whitespaceComparison = whitespaceCompare(a, b, true);
+            }
             return whitespaceComparison && diferentOrderOfAttributes(a, b);
         } else {
             NodeList listA = justChildNodes(a);
             NodeList listB = justChildNodes(b);
 
-            if (listA.getLength() == listB.getLength()) {
+            if (listA.getLength() == listA.getLength()) {
+                //System.out.println(listA.getLength()+" "+listB.getLength());
                 int countOfBool = 0;
 
                 for (int i = 0; i < listA.getLength(); i++) {
@@ -148,28 +161,37 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                         if (listA.item(i).getNodeName().equals(listB.item(j).getNodeName())) {
                             if (diferentOrderOfAttributes((Element) listA.item(i), (Element) listB.item(j))) {
                                 countOfBool++;
-
-                                System.out.println(justChildNodes((Element) listB.item(j)).getLength());
+                                //deleting attribut difference aftre finding right element to element
+                                if (sda != null) {
+                                    strings.removeAll(sda);
+                                }
+                                sda.clear();
+                                // System.out.println(justChildNodes((Element) listB.item(j)).getLength());
                                 //removing child without children
                                 if (justChildNodes((Element) listB.item(j)).getLength() == 0) {
-                                    System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
+                                    //   System.out.println(listA.item(i).getNodeName() + " ," + listB.item(j).getNodeName());
                                     checkHigherNodes(listA.item(i), listB.item(j));
                                 } else {
                                     //going further to the tree until find child without children
                                     elementEquals((Element) listA.item(i), (Element) listB.item(j));
                                 }
-                            }
+                            }//adding attribut difference
+                            strings.addAll(sda);
                             break;
                         }
                         break;
                     }
                 }
-                if (countOfBool == listA.getLength()) {
+                if (countOfBool == 1) {
+                    System.out.println(countOfBool + " true");
                     return true;
                 } else {
+                    System.out.println(countOfBool + "  false");
+                    strings.add("Elementy '" + a.getNodeName() + "' dvou dokumentů neobsahují stejné potomky.");
                     return false;
                 }
             } else {
+                strings.add("Počet potomků uzlu '" + a.getNodeName() + "' je různý.");
                 return false;
             }
         }
@@ -218,7 +240,7 @@ public class XmlSemDiff implements XmlSemDiffInterface {
                     grannyNode1 = (Element) a.getParentNode();
                     grannyNode2 = (Element) b.getParentNode();
                 }
-                
+
             }
         }
         Element e = (Element) b;
@@ -227,12 +249,12 @@ public class XmlSemDiff implements XmlSemDiffInterface {
         //after removing child go higher in tree and check children again
         elementEquals(grannyNode1, grannyNode2);
     }
-    
+
     @Override
-    public void differencies(){
+    public void differencies() {
         Iterator iterator;
         iterator = strings.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             System.out.print(iterator.next() + " ");
             System.out.println();
         }
